@@ -93,8 +93,7 @@ class Home extends BaseController
     {
         $userModel = new UserModel();
         $user = $userModel->find($userId);
-        // print_r($user);
-        // die();
+        
         echo view('admin/layout/header');
         echo view('admin/dashboard/user_details', compact('user'));
         echo view('admin/layout/footer');
