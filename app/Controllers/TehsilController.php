@@ -11,22 +11,18 @@ class TehsilController extends BaseController
 
     public function index()
     {
-        // Get district ID from the query parameters
         $districtId = $this->request->getVar('districtId');
   
-        // Check if district ID is provided
+        
         if ($districtId !== null) {
-            // Fetch tehsils for the specified district
             
             $tehsilModel = new TehModel();
             
-            $tehsils = $tehsilModel->findAll();
+            $tehsils = $tehsilModel->where('district_id', $districtId)->findAll();
            
-            
-            // Return tehsils as JSON response
             return $this->respond($tehsils);
         } else {
-            // District ID is not provided, return empty response or appropriate error
+
             return $this->fail('District ID is required.', 400);
         }
     }

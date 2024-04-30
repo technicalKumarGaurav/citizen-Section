@@ -93,58 +93,72 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    // Get references to dropdowns
-    const districtDropdown = document.getElementById('district');
-    const tehsilDropdown = document.getElementById('tehsil');
-    const panchayatDropdown = document.getElementById('panchayat');
-    const villageDropdown = document.getElementById('village');
+    document.addEventListener("DOMContentLoaded", function () {
+        const districtDropdown = document.getElementById('district');
+        const tehsilDropdown = document.getElementById('tehsil');
+        const panchayatDropdown = document.getElementById('panchayat');
+        const villageDropdown = document.getElementById('village');
 
-    // Event listener for district dropdown change
-    districtDropdown.addEventListener('change', async function() {
-        const selectedDistrictId = this.value;
-        if (selectedDistrictId) {
-            // Fetch tehsils for the selected district
-            const tehsils = await fetchTehsils(selectedDistrictId);
-            // Update tehsil dropdown options
-            updateDropdown(tehsilDropdown, tehsils);
-            // Enable tehsil dropdown
-            tehsilDropdown.disabled = false;
-            // Disable dependent dropdowns
-            panchayatDropdown.disabled = true;
-            villageDropdown.disabled = true;
-        } else {
-            // If no district is selected, disable tehsil dropdown
-            tehsilDropdown.disabled = true;
-            // Disable dependent dropdowns
-            panchayatDropdown.disabled = true;
-            villageDropdown.disabled = true;
+        districtDropdown.addEventListener('change', async function() {
+            const selectedDistrictId = this.value;
+            if (selectedDistrictId) {
+                const tehsils = await fetchTehsils(selectedDistrictId);
+                updateDropdown(tehsilDropdown, tehsils);
+                tehsilDropdown.disabled = false;
+                panchayatDropdown.disabled = true;
+                villageDropdown.disabled = true;
+            } else {
+                tehsilDropdown.disabled = true;
+                panchayatDropdown.disabled = true;
+                villageDropdown.disabled = true;
+            }
+        });
+
+        tehsilDropdown.addEventListener('change', async function() {
+            const selectedTehsilId = this.value;
+            if (selectedTehsilId) {
+                // Fetch Gram Panchayats based on the selected Tehsil ID
+                const panchayats = await fetchPanchayats(selectedTehsilId);
+                // Update the Gram Panchayat dropdown with fetched panchayats
+                updateDropdown(panchayatDropdown, panchayats);
+                // Enable the Gram Panchayat dropdown
+                panchayatDropdown.disabled = false;
+                // Disable the Village dropdown for now
+                villageDropdown.disabled = true;
+            } else {
+                panchayatDropdown.disabled = true;
+                villageDropdown.disabled = true;
+            }
+        });
+
+        async function fetchTehsils(districtId) {
+            const response = await fetch(`/api/tehsils?districtId=${districtId}`);
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error('Failed to fetch tehsils');
+                return [];
+            }
+        }
+
+        async function fetchPanchayats(tehsilId) {
+            const response = await fetch(`/api/panchayats?tehsilId=${tehsilId}`);
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error('Failed to fetch panchayats');
+                return [];
+            }
+        }
+
+        function updateDropdown(dropdown, options) {
+            dropdown.innerHTML = '';
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.id;
+                optionElement.textContent = option.name;
+                dropdown.appendChild(optionElement);
+            });
         }
     });
-
-    // Function to fetch tehsils for a district
-    async function fetchTehsils(districtId) {
-        // Make AJAX request to fetch tehsils for the selected district
-        // Replace with your actual API endpoint
-        const response = await fetch(`/api/tehsils?districtId=${districtId}`);
-        if (response.ok) {
-            return response.json();
-        } else {
-            console.error('Failed to fetch tehsils');
-            return [];
-        }
-    }
-
-    // Function to update dropdown options
-    function updateDropdown(dropdown, options) {
-        // Clear existing options
-        dropdown.innerHTML = '';
-        // Add new options
-        options.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option.id;
-            optionElement.textContent = option.name;
-            dropdown.appendChild(optionElement);
-        });
-    }
-
 </script>
