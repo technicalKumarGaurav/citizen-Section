@@ -1,5 +1,5 @@
 <div class="content-wrapper">
-    
+
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -7,77 +7,81 @@
                 <div class="col-md-12">
                     <?= validation_list_errors() ?>
                     <!-- general form elements -->
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Quick Example</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <form action="<?= site_url('/submit-data') ?>" method="post" enctype="multipart/form-data">
+                    <div class="card card-primary mt-3">
+                   
+                        <form id="citizen" action="<?= site_url('/submit-data') ?>" method="post"
+                            enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Applicant Name</label>
-                                    <input type="text" class="form-control"
-                                        placeholder="Enter Name" name="name" value="<?= old('name');?>">
+                                    <input type="text" class="form-control" placeholder="Enter Name" name="name"
+                                        value="<?= old('name');?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Enter Mobile No.</label>
-                                    <input type="number" class="form-control" 
-                                        placeholder="Enter Mobile Number" name="phone" value="<?= old('phone');?>">
+                                    <input type="number" class="form-control" placeholder="Enter Mobile Number"
+                                        name="phone" value="<?= old('phone');?>">
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">District</label>
-                                        <select class="form-control select2 select2-hidden-accessible" name="district" id="district">
+                                        <select class="form-control select2 select2-hidden-accessible" name="district"
+                                            id="district" required>
                                             <option selected diasabled> Select District</option>
                                             <?php foreach ($districts as $district) : ?>
-                                                <option value="<?= $district['id'] ?>"><?= $district['name'] ?></option>
+                                            <option value="<?= $district['id'] ?>"><?= $district['name'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                    </div>    
+                                    </div>
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">Tehsil</label>
-                                        <select class="form-control select2 select2-hidden-accessible" name="tehsil" id="tehsil" disabled>
-                                            
+                                        <select class="form-control select2 select2-hidden-accessible" name="tehsil"
+                                            id="tehsil" disabled>
+
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">Gram Panchayat</label>
-                                        <select class="form-control select2 select2-hidden-accessible" name="gp" id="panchayat" disabled>
+                                        <select class="form-control select2 select2-hidden-accessible" name="gp"
+                                            id="panchayat" disabled>
                                             <option selected diasabled> Select Gram Panchayat</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">Village</label>
-                                        <select class="form-control select2 select2-hidden-accessible" name="village" id="village" disabled>
+                                        <select class="form-control select2 select2-hidden-accessible" name="village"
+                                            id="village" disabled>
                                             <option selected diasabled> Village</option>
                                         </select>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="exampleInputFile">Select Slot for judicial</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="date" class="form-control" name="slot" placeholder="Enter" value="<?= old('slot');?>">
+                                            <input type="date" class="form-control" name="slot" placeholder="Enter"
+                                                value="<?= old('slot');?>">
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group">
                                     <label for="exampleInputFile">Department</label>
-                                    <select class="form-control select2 select2-hidden-accessible" name="department" id="">
-                                    <?php foreach ($departments as $department) : ?>
-                                        <option value="<?= $department['id'] ?>"><?= $department['department_name'] ?></option>
-                                    <?php endforeach; ?>   
+                                    <select class="form-control select2 select2-hidden-accessible" name="department"
+                                        id="">
+                                        <?php foreach ($departments as $department) : ?>
+                                        <option value="<?= $department['id'] ?>"><?= $department['department_name'] ?>
+                                        </option>
+                                        <?php endforeach; ?>
                                     </select>
-                                </div>  
+                                </div>
                                 <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="exampleInputFile" name="file">
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
-                                    
-                                </div>                               
+
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -91,6 +95,8 @@
     </section>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -99,7 +105,7 @@
         const panchayatDropdown = document.getElementById('panchayat');
         const villageDropdown = document.getElementById('village');
 
-        districtDropdown.addEventListener('change', async function() {
+        districtDropdown.addEventListener('change', async function () {
             const selectedDistrictId = this.value;
             if (selectedDistrictId) {
                 const tehsils = await fetchTehsils(selectedDistrictId);
@@ -114,23 +120,23 @@
             }
         });
 
-        tehsilDropdown.addEventListener('change', async function() {
+        tehsilDropdown.addEventListener('change', async function () {
             const selectedTehsilId = this.value;
             if (selectedTehsilId) {
-                
+
                 const panchayats = await fetchPanchayats(selectedTehsilId);
-                
+
                 updateDropdown(panchayatDropdown, panchayats);
-                
+
                 panchayatDropdown.disabled = false;
-                
+
                 villageDropdown.disabled = true;
             } else {
                 panchayatDropdown.disabled = true;
                 villageDropdown.disabled = true;
             }
         });
-        panchayatDropdown.addEventListener('change', async function() {
+        panchayatDropdown.addEventListener('change', async function () {
             const selectedPanchayatId = this.value;
             if (selectedPanchayatId) {
                 const villages = await fetchVillages(selectedPanchayatId);
@@ -160,7 +166,7 @@
                 return [];
             }
         }
-        
+
         async function fetchVillages(panchayatId) {
             const response = await fetch(`/api/villages?panchayatId=${panchayatId}`);
             if (response.ok) {
@@ -173,13 +179,13 @@
 
         function updateDropdown(dropdown, options) {
             dropdown.innerHTML = '';
-            
+
             // Adding "Please Select" option
             const pleaseSelectOption = document.createElement('option');
             pleaseSelectOption.value = '';
             pleaseSelectOption.textContent = 'Please Select';
             dropdown.appendChild(pleaseSelectOption);
-            
+
             // Adding other options
             options.forEach(option => {
                 const optionElement = document.createElement('option');
@@ -190,4 +196,41 @@
         }
     });
 </script>
-
+<!--Form Validation-->
+<script>
+    $(document).ready(function () {
+        $("#citizen").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 2
+                },
+                phone: {
+                    required: true,
+                    number: true,
+                    minlength: 10
+                },
+                district: {
+                    required: true,
+                },
+            },
+            messages: {
+                name: {
+                    required: "Please enter your name",
+                    minlength: "Name must be at least 2 characters long"
+                },
+                phone: {
+                    required: "Please enter your mobile number",
+                    number: "Please enter a valid mobile number",
+                    minlength: "Mobile number must be at least 10 characters long"
+                },
+                district: {
+                    required: "Please select a district",
+                },
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

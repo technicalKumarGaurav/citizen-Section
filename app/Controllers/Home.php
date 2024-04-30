@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
 use App\Models\DepartmentModel;
 use App\Models\DistrictModel;
 use CodeIgniter\Controller;
@@ -24,6 +25,7 @@ class Home extends BaseController
         echo view('admin/layout/header');
         echo view('admin/dashboard/index', compact('departments', 'districts'));
         echo view('admin/layout/footer');
+        
     }
 
     public function store()
@@ -40,19 +42,61 @@ class Home extends BaseController
             'department' => 'required',
         ]);
     
-        // Validate the request data
+        
         if (!$validation->withRequest($this->request)->run()) {
-            // Validation failed, redirect back with validation errors
+            
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
-        
-        // If validation passes, proceed to store data
-        $name = $this->request->getPost('name');
-        $phone = $this->request->getPost('phone');
-        // Retrieve other form fields similarly
+        // var_dump($_POST);
+        // die();
+        $randomNumber1 = mt_rand(100, 999); 
+        $randomNumber2 = mt_rand(100, 999);
+        $userModel = new UserModel();
+        $inputData = [
+            'user_name' => $this->request->getPost('name'),
+            'phone' => $this->request->getPost('phone'),
+            'district_id' => $this->request->getPost('district'),
+            'tehsil_id' => $this->request->getPost('tehsil'),
+            'gp_id' => $this->request->getPost('gp'),
+            'village_id' => $this->request->getPost('village'),
+            'slot' => $this->request->getPost('slot'),
+            'department_id' => $this->request->getPost('department'),
+            'token' => "#" . $randomNumber1 . "#" . $randomNumber2 . "#",
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $userModel->insert($inputData);
+        return redirect()->route('thankyou')->with('Token', "#" . $randomNumber1 . "#" . $randomNumber2 . "#");
+    }
 
-        // Perform data storage or further processing here
-        
-        return redirect()->to('success_page')->with('success', 'Data submitted successfully!');
+    //
+    public function thnakyou()
+    {
+        return "Thank you";
+    }
+    //
+    public function status()
+    {       
+        $usersModel = new UserModel();
+        $sql = "SELECT users.*, departments.department_name 
+                FROM users 
+                JOIN departments ON departments.id = users.department_id";
+
+        $query = $usersModel->query($sql);
+
+        $usersData = $query->getResult();
+        echo view('admin/layout/header');
+        echo view('admin/dashboard/status', compact('usersData'));
+        echo view('admin/layout/footer');
+    }
+
+    public function userDetails($userId)
+    {
+        $userModel = new UserModel();
+        $user = $userModel->find($userId);
+        // print_r($user);
+        // die();
+        echo view('admin/layout/header');
+        echo view('admin/dashboard/user_details', compact('user'));
+        echo view('admin/layout/footer');
     }
 }

@@ -8,9 +8,12 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->post('/submit-data', 'Home::store');
-// $routes->get('api/tehsils', 'TehsilController::index');
+$routes->get('/request-status', 'Home::status');
+$routes->get('user_details/(:num)', 'Home::userDetails/$1');
 $routes->group('api', function ($routes) {
     $routes->get('tehsils', 'TehsilController::index');
     $routes->get('panchayats', 'PanchayatController::index');
     $routes->get('villages', 'VillageController::index');
 });
+
+$routes->get('/thankyou', 'Home::thankyou', ['as' => 'thankyou']);
