@@ -44,13 +44,13 @@
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">Gram Panchayat</label>
                                         <select class="form-control select2 select2-hidden-accessible" name="gp" id="panchayat" disabled>
-                                            
+                                            <option selected diasabled> Select Gram Panchayat</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">Village</label>
                                         <select class="form-control select2 select2-hidden-accessible" name="village" id="village" disabled>
-                                            
+                                            <option selected diasabled> Village</option>
                                         </select>
                                     </div>
                                 </div>
@@ -59,13 +59,13 @@
                                     <label for="exampleInputFile">Select Slot for judicial</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="date" class="form-control" name="slot" placeholder="Enter District Name" value="<?= old('slot');?>">
+                                            <input type="date" class="form-control" name="slot" placeholder="Enter" value="<?= old('slot');?>">
                                         </div>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <label for="exampleInputFile">Department</label>
-                                    <select class="form-control select2 select2-hidden-accessible" name="village" id="">
+                                    <select class="form-control select2 select2-hidden-accessible" name="department" id="">
                                     <?php foreach ($departments as $department) : ?>
                                         <option value="<?= $department['id'] ?>"><?= $department['department_name'] ?></option>
                                     <?php endforeach; ?>   
@@ -91,7 +91,7 @@
     </section>
 
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const districtDropdown = document.getElementById('district');
@@ -117,16 +117,26 @@
         tehsilDropdown.addEventListener('change', async function() {
             const selectedTehsilId = this.value;
             if (selectedTehsilId) {
-                // Fetch Gram Panchayats based on the selected Tehsil ID
+                
                 const panchayats = await fetchPanchayats(selectedTehsilId);
-                // Update the Gram Panchayat dropdown with fetched panchayats
+                
                 updateDropdown(panchayatDropdown, panchayats);
-                // Enable the Gram Panchayat dropdown
+                
                 panchayatDropdown.disabled = false;
-                // Disable the Village dropdown for now
+                
                 villageDropdown.disabled = true;
             } else {
                 panchayatDropdown.disabled = true;
+                villageDropdown.disabled = true;
+            }
+        });
+        panchayatDropdown.addEventListener('change', async function() {
+            const selectedPanchayatId = this.value;
+            if (selectedPanchayatId) {
+                const villages = await fetchVillages(selectedPanchayatId);
+                updateDropdown(villageDropdown, villages);
+                villageDropdown.disabled = false;
+            } else {
                 villageDropdown.disabled = true;
             }
         });
@@ -150,9 +160,27 @@
                 return [];
             }
         }
+        
+        async function fetchVillages(panchayatId) {
+            const response = await fetch(`/api/villages?panchayatId=${panchayatId}`);
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error('Failed to fetch villages');
+                return [];
+            }
+        }
 
         function updateDropdown(dropdown, options) {
             dropdown.innerHTML = '';
+            
+            // Adding "Please Select" option
+            const pleaseSelectOption = document.createElement('option');
+            pleaseSelectOption.value = '';
+            pleaseSelectOption.textContent = 'Please Select';
+            dropdown.appendChild(pleaseSelectOption);
+            
+            // Adding other options
             options.forEach(option => {
                 const optionElement = document.createElement('option');
                 optionElement.value = option.id;
@@ -162,3 +190,4 @@
         }
     });
 </script>
+

@@ -12,4 +12,5 @@ $routes->post('/submit-data', 'Home::store');
 $routes->group('api', function ($routes) {
     $routes->get('tehsils', 'TehsilController::index');
     $routes->get('panchayats', 'PanchayatController::index');
+    $routes->get('villages', 'VillageController::index');
 });
