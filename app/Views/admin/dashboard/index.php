@@ -8,9 +8,8 @@
                     <?= validation_list_errors() ?>
                     <!-- general form elements -->
                     <div class="card card-primary mt-3">
-                   
-                        <form id="citizen" action="<?= site_url('/submit-data') ?>" method="post"
-                            enctype="multipart/form-data">
+                  
+                        <form id="citizen" action="<?= site_url('/submit-data') ?>" method="post" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Applicant Name</label>
@@ -25,9 +24,9 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="exampleInputFile">District</label>
-                                        <select class="form-control select2 select2-hidden-accessible" name="district"
+                                        <select class="form-control" name="district"
                                             id="district" required>
-                                            <option selected diasabled> Select District</option>
+                                            <option value=""> Select District</option>
                                             <?php foreach ($districts as $district) : ?>
                                             <option value="<?= $district['id'] ?>"><?= $district['name'] ?></option>
                                             <?php endforeach; ?>
@@ -59,10 +58,12 @@
                                 <div class="form-group">
                                     <label for="exampleInputFile">Select Slot for judicial</label>
                                     <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="date" class="form-control" name="slot" placeholder="Enter"
-                                                value="<?= old('slot');?>">
-                                        </div>
+                                    <select class="form-control select2 select2-hidden-accessible" name="slot">
+                                        <option selected disabled>Please Select Slot</option>
+                                        <?php foreach ($dates as $date) : ?>
+                                            <option value="<?= $date['slot_date'] ?>" ><?= date('d/m/Y',strtotime($date['slot_date'])) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -75,12 +76,9 @@
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleInputFile" name="file">
-                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                    </div>
-
+                                <div class="input-group">   
+                                        <input type="file" class="form-control-file" id="file" name="user_file">
+                                        <!-- <label class="custom-file-label" for="exampleInputFile">Choose file</label> -->
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -208,10 +206,23 @@
                 phone: {
                     required: true,
                     number: true,
-                    minlength: 10
+                    minlength: 10,
+                    maxlength:10
                 },
                 district: {
                     required: true,
+                },
+                tehsil:{
+                    required: true,
+                },
+                gp:{
+                    required: true,
+                },
+                village:{
+                    required: true,
+                },
+                user_file: {
+                    required: true
                 },
             },
             messages: {
@@ -227,10 +238,23 @@
                 district: {
                     required: "Please select a district",
                 },
+                file: {
+                    required: "Please select a file",
+                    accept: "Only pdf",
+                    filesize: "File size must be less than 5MB"
+                }
             },
             submitHandler: function (form) {
                 form.submit();
             }
         });
+        $.validator.addMethod('filesize', function (value, element, param) {
+
+            var fileSize = element.files[0].size;
+
+            var maxSize = param * 1024 * 1024;
+
+            return this.optional(element) || fileSize <= maxSize;
+        }, '');
     });
 </script>

@@ -16,4 +16,5 @@ $routes->group('api', function ($routes) {
     $routes->get('villages', 'VillageController::index');
 });
 
-$routes->get('/thankyou', 'Home::thankyou', ['as' => 'thankyou']);
+$routes->get('/thankyou', 'Home::thankyou');
+$routes->get('/generatePdf', 'Home::generatePdf');

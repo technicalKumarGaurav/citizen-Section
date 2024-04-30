@@ -46,24 +46,49 @@
     text-align : center;
  }
 
- /* .nav-item .active {
+ .nav-item .active {
     background : #0acfd9 !important;
- } */
+ }
+ .nav-item >a 
+ {
+    color: #000 !important;
+ }
+ a.header.nav-link.active {
+    background: green !important;
+}
+.wel{
+    padding-left:20px;
+    padding-right:20px;
+}
  </style>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Left navbar links -->
+        <?php $uri = service('uri');
+        $currentUrl = $uri->getPath(); ?>
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="<?php echo base_url('/') ?>" class="nav-link">Raise Request</a>
+                    <a href="<?= base_url('/') ?>" class="header nav-link<?= ($currentUrl === '/index.php/') ? ' active' : '' ?>">Raise Request</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="<?php echo base_url('/request-status'); ?>" class="nav-link">Request Status</a>
+                    <a href="<?= base_url('/request-status') ?>" class="header nav-link<?= ($currentUrl === '/index.php/request-status') ? ' active' : '' ?>">Request Status</a>
                 </li>
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                    <li>
+                            <div class="info">
+                                 <a href="#" class="d-block">Welcome ! Citizen</a>
+                            </div> 
+                    </li>
+                    <li>
+                            <div class="image">
+                                <i class="fa fa-user wel"></i>
+                            </div>
+                    </li>
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -84,7 +109,7 @@
                             
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link ">
                                         
                                         <p>HOME</p>
                                     </a>
@@ -96,7 +121,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link">
                                         
                                         <p>SCHEME</p>
                                     </a>

@@ -41,6 +41,7 @@ class Autoload extends AutoloadConfig
      */
     public $psr4 = [
         APP_NAMESPACE => APPPATH,
+        
     ];
 
     /**
@@ -60,7 +61,9 @@ class Autoload extends AutoloadConfig
      *
      * @var array<string, string>
      */
-    public $classmap = [];
+    public $classmap = [
+        'MPDF' => APPPATH .'Libraries/mpdf.php'
+    ];
 
     /**
      * -------------------------------------------------------------------
